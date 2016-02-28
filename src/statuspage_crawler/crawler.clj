@@ -1,10 +1,10 @@
 (ns statuspage-crawler.crawler
-  (:require [net.cgrand.enlive-html :as html]
+  (:require 
             [statuspage-crawler.config :as config]
             [statuspage-crawler.tag :as tag]
             [statuspage-crawler.util :as util]
             [statuspage-crawler.link :as link]
-            [kits.map :as m])
+            [clojurewerkz.urly.core :as urly])
   (:import [java.net URL]))
 
 (defn fetch-url [url]
@@ -19,13 +19,16 @@
            (tag/extract-tags tag-type)
            (map #(tag/->tag-src tag-type %))))
 
+(def find-img-tags (partial find-all-tags :img))
+(def find-link-tags (partial find-all-tags :a))
+
 (declare find-all-image-links-in-url*)
 
 (defn- find-imgs-and-recursively-crawl-new-urls [url-link img-links level]
   (let [html (fetch-url url-link)
-        new-img-links (find-all-tags :img html)
-        new-url-links (->> (find-all-tags :a html)
-                           (mapv #(util/fully-qualify-url url-link %)))]
+        new-img-links (find-img-tags html)
+        new-url-links (->> (find-link-tags html)
+                           (mapv #(link/fully-qualify-url url-link %)))]
     (if (empty? new-url-links)
       img-links
       (->> new-url-links
@@ -34,7 +37,6 @@
                                                         [url-link new-img-links])
                                                   (inc level)))
            (into [])))))
-
 
 (defn- find-all-image-links-in-url* [url-link img-links level]
   (if (= level (config/max-recursive-level))

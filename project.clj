@@ -8,4 +8,5 @@
                  [hickory "0.6.0"]
                  [enlive "1.1.6"]
                  [me.raynes/fs "1.4.6"]
-                 [org.clojars.runa/kits "1.20.1"]])
+                 [org.clojars.runa/kits "1.20.1"]
+                 [clojurewerkz/urly "1.0.0"]])

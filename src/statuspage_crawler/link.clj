@@ -1,6 +1,6 @@
 (ns ^{:doc "Namespace for manipulating href & img src links"}
   statuspage-crawler.link
-  (:require [kits.map :as m]))
+  (:require [clojurewerkz.urly.core :as urly]))
 
 (def img-regex #"(.*\.(?:png|jpg|gif))")
 

@@ -10,9 +10,6 @@
 (defn extract-tags [tag-type enlive-html]
   (html/select enlive-html [:body tag-type]))
 
-(def extract-img-tags #(extract-img-tags :img))
-(def extract-link-tags #(extract-img-tags :a))
-
 (defn ->tag-src [tag-type tag]
   (if-let [path (get tag-type->enlive-path tag-type)]
     (let [src (get-in tag path)]
