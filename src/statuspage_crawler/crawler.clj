@@ -1,6 +1,9 @@
 (ns statuspage-crawler.crawler
   (:require [net.cgrand.enlive-html :as html]
-            [statuspage-crawler.tag :as tag])
+            [statuspage-crawler.tag :as tag]
+            [statuspage-crawler.util :as util]
+            [statuspage-crawler.link :as link]
+            [kits.map :as m])
   (:import [java.net URL]))
 
 (defn fetch-url [url]
@@ -15,21 +18,30 @@
            (tag/extract-tags tag-type)
            (map #(tag/->tag-src tag-type %))))
 
-(declare find-all-image-links-in-url)
+(declare find-all-image-links-in-url*)
 
-(defn recursively-crawl-url [url-link img-links level]
+(defn- find-imgs-and-recursively-crawl-new-urls [url-link img-links level]
   (let [html (fetch-url url-link)
         new-img-links (find-all-tags :img html)
-        new-url-links (find-all-tags :a html)]
-    (if html
+        new-url-links (->> (find-all-tags :a html)
+                           (mapv #(util/fully-qualify-url url-link %)))]
+    (if (empty? new-url-links)
+      img-links
       (->> new-url-links
-           (mapcat #(find-all-image-links-in-url %
-                                                 (concat img-links new-img-links)
-                                                 (inc level))))
-      
-      img-links)))
+           (mapcat #(find-all-image-links-in-url* %
+                                                  (conj img-links
+                                                        [url-link new-img-links])
+                                                  (inc level)))
+           (into [])))))
 
-(defn find-all-image-links-in-url [url-link img-links level]
+
+(defn- find-all-image-links-in-url* [url-link img-links level]
   (if (> level 1)
     img-links
-    (recursively-crawl-url url-link img-links level)))
+    (find-imgs-and-recursively-crawl-new-urls url-link img-links level)))
+
+(defn find-all-image-links-in-url [url]
+  (let [domain->imgs (find-all-image-links-in-url* url #{} 0)]
+    (->> domain->imgs
+         link/filter-and-fully-qualify-valid-images
+         (into {}))))
