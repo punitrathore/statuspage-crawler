@@ -1,5 +1,6 @@
 (ns statuspage-crawler.crawler
   (:require [net.cgrand.enlive-html :as html]
+            [statuspage-crawler.config :as config]
             [statuspage-crawler.tag :as tag]
             [statuspage-crawler.util :as util]
             [statuspage-crawler.link :as link]
@@ -36,7 +37,7 @@
 
 
 (defn- find-all-image-links-in-url* [url-link img-links level]
-  (if (> level 1)
+  (if (= level (config/max-recursive-level))
     img-links
     (find-imgs-and-recursively-crawl-new-urls url-link img-links level)))
 
