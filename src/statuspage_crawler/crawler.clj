@@ -45,4 +45,6 @@
   (let [domain->imgs (find-all-image-links-in-url* url #{} 0)]
     (->> domain->imgs
          link/filter-and-fully-qualify-valid-images
+         (filter (fn [[url imgs]]
+                   (not (empty? imgs))))
          (into {}))))
