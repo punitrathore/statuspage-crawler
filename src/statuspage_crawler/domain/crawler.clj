@@ -54,9 +54,9 @@
          (into {}))))
 
 (defn images-in-urls [job-id urls]
-  (let [url->images (reduce (fn [url->imgs url]
-                              (merge url->imgs
-                                     (find-all-image-links-in-url url)))
-                            {} urls)]
+  (let [url->images (->> urls
+                         (pmap (fn [url]
+                                 (find-all-image-links-in-url url)))
+                         (apply merge))]
     (db/update-job job-id {:body (json/encode url->images)
                            :status "completed"})))
