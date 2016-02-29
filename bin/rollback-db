@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+
+set -e
+
+if [ "-h" = "$1" -o "-?" = "$1" ] ; then
+  echo "Usage: $0 [version-to-rollback-to]"
+  exit 1
+fi
+
+VERSION=$1
+shift
+
+. bin/db-defaults
+
+DOGFISH_PG_OPTS="--host ${PG_HOST} --port ${PG_PORT}" \
+  bin/dogfish rollback "${PG_DB}" "${VERSION}"
+

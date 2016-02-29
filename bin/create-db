@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PROG=$(basename $0)
+SVC_ROOT=$(cd $(dirname $0)/..; pwd)
+
+. ${SVC_ROOT}/bin/db-defaults
+
+set -e
+
+PSQL="${PSQL} -v ON_ERROR_STOP=1"
+
+echo "Creating ${PG_DB} on ${PG_HOST}:${PG_PORT}"
+echo "drop role if exists statuspage;" | ${PSQL} postgres
+echo "create role statuspage with superuser createdb createrole inherit login encrypted password 'password';" | ${PSQL} postgres
+echo "create database ${PG_DB} with owner statuspage;" | ${PSQL} postgres

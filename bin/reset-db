@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+#
+
+PROG=$(basename $0)
+SVC_ROOT=$(cd $(dirname $0)/..; pwd)
+
+. ${SVC_ROOT}/bin/db-defaults
+
+${SVC_ROOT}/bin/drop-db $* &&
+  ${SVC_ROOT}/bin/create-db $* &&
+  ${SVC_ROOT}/bin/migrate-db $*

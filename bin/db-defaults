@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# Defaults for database commands
+
+usage() {
+cat <<EOF
+  Usage: ${PROG} [db name] [postgresql port] [postgresql host]
+
+  Drops data and schema in eccentrica db and recreates it.
+
+  Defaults:
+   - db name ........... eccentrica_dev
+   - postgresql port ... 5442
+   - postgresql host ... localhost
+
+EOF
+  exit 1
+}
+
+if [ "-h" = "$1" -o "-?" = "$1" ] ; then
+  usage
+fi
+
+PG_DB=${1:-statuspage_dev}
+PG_PORT=${2:-5432}
+PG_HOST=${3:-127.0.0.1}
+PSQL="psql -h ${PG_HOST} -p ${PG_PORT}"

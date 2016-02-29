@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+
+PROG=$(basename $0)
+SVC_ROOT=$(cd $(dirname $0)/..; pwd)
+
+set -e
+
+usage() {
+cat <<EOF
+  Usage: ${PROG} [db name] [postgresql port] [postgresql host] [migration to stop at]
+
+  Drops data and schema in eccentrica db and recreates it.
+
+  Defaults:
+   - db name ................ statuspage_dev
+   - postgresql port ........ 5442
+   - postgresql host ........ localhost
+   - migration to stop at ... latest
+
+EOF
+  exit 1
+}
+
+if [ "-h" = "$1" -o "-?" = "$1" ] ; then
+  usage
+fi
+
+. ${SVC_ROOT}/bin/db-defaults
+VERSION=$4;
+
+DOGFISH_PG_OPTS="--host ${PG_HOST} --port ${PG_PORT}"
+export DOGFISH_PG_OPTS
+#
+# Dogfish really wants to be called from ./bin/dogfish to autodetect pg_migrations
+#
+from="${PWD}"
+cd ${SVC_ROOT}
+./bin/dogfish migrate "${PG_DB}" ${VERSION}
+cd "${from}"

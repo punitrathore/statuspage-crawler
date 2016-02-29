@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+
+PROG=$(basename $0)
+SVC_ROOT=$(cd $(dirname $0)/..; pwd)
+
+. ${SVC_ROOT}/bin/db-defaults
+
+set -e
+
+echo "Dropping ${PG_DB} from ${PG_HOST}:${PG_PORT}"
+echo "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${PG_DB}' AND pid <> pg_backend_pid();" |
+   ${PSQL} -v ON_ERROR_STOP=1 postgres > /dev/null
+echo "drop database ${PG_DB};" | ${PSQL} postgres
