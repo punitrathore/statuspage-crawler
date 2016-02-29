@@ -3,9 +3,9 @@
             [cheshire.core :as json]
             [statuspage-crawler.config :as config]
             [statuspage-crawler.server.db :as db]
-            [statuspage-crawler.tag :as tag]
+            [statuspage-crawler.domain.tag :as tag]
             [statuspage-crawler.util :as util]
-            [statuspage-crawler.link :as link]
+            [statuspage-crawler.domain.link :as link]
             [clojurewerkz.urly.core :as urly])
   (:import [java.net URL]))
 
