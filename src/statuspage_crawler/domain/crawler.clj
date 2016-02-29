@@ -1,6 +1,8 @@
-(ns statuspage-crawler.crawler
-  (:require 
+(ns statuspage-crawler.domain.crawler
+  (:require [net.cgrand.enlive-html :as html]
+            [cheshire.core :as json]
             [statuspage-crawler.config :as config]
+            [statuspage-crawler.server.db :as db]
             [statuspage-crawler.tag :as tag]
             [statuspage-crawler.util :as util]
             [statuspage-crawler.link :as link]
@@ -50,3 +52,11 @@
          (filter (fn [[url imgs]]
                    (not (empty? imgs))))
          (into {}))))
+
+(defn images-in-urls [job-id urls]
+  (let [url->images (reduce (fn [url->imgs url]
+                              (merge url->imgs
+                                     (find-all-image-links-in-url url)))
+                            {} urls)]
+    (db/update-job job-id {:body (json/encode url->images)
+                           :status "completed"})))

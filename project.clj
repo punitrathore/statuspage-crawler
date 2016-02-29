@@ -8,5 +8,10 @@
                  [hickory "0.6.0"]
                  [enlive "1.1.6"]
                  [me.raynes/fs "1.4.6"]
-                 [org.clojars.runa/kits "1.20.1"]
-                 [clojurewerkz/urly "1.0.0"]])
+                 [clojurewerkz/urly "1.0.0"]
+                 [ring "1.4.0"]
+                 [ring/ring-json "0.4.0"]
+                 [compojure "1.4.0"]
+                 [org.clojure/java.jdbc "0.4.2"]
+                 [org.postgresql/postgresql "9.4-1201-jdbc41"]
+                 [cheshire "5.5.0"]])
