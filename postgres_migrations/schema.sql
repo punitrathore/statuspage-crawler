@@ -52,7 +52,7 @@ CREATE TABLE jobs (
     status character varying(100) NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    body json
+    body text
 );
 
 
