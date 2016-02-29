@@ -4,12 +4,17 @@
             [compojure.core :refer [defroutes context routes GET POST PUT]]
             [compojure.route :as route]
             [statuspage-crawler.domain.crawler :as crawler]
-            [statuspage-crawler.server.db :as db]))
+            [statuspage-crawler.server.db :as db]
+            [statuspage-crawler.util :refer :all]))
 
 (defn not-found-response [job-id]
   {:status 404
    :body (str "Could not find job with id : " job-id)})
 
+(defn ->ring-response [status body]
+  {:status status
+   :body body
+   :content-type "application/json"})
 
 (defn create-new-job [{:keys [params]}]
   (let [urls (get params "urls")
@@ -17,22 +22,18 @@
         job-id (:id job-row)]
     (future
       (crawler/images-in-urls job-id urls))
-    {:status 202
-     :body (json/encode {:job-id job-id})}))
+    (->ring-response 202 (json/encode {:job-id job-id}))))
 
 (defn status [{:keys [params]} job-id]
   (if-let [job (db/find-job job-id)]
-    {:status 200
-     :body (json/encode {:status (:status job)})}
+    (->ring-response 200 (json/encode {:status (:status job)}))
     (not-found-response job-id)))
 
 (defn result [{:keys [params]} job-id]
   (if-let [job (db/find-job job-id)]
     (if (= "completed" (:status job))
-      {:status 200
-       :body (:body job)}
-      {:status 200
-       :body "Job is still running. Check back later."})
+      (->ring-response 200 (json/encode (:body job)))
+      (->ring-response 200 "Job is still running. Check back later."))
     (not-found-response job-id)))
 
 (def all-routes
