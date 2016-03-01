@@ -60,10 +60,17 @@
 
    (route/not-found "<h1>Page Not Found</h1>")))
 
+(defn trace-info [request response]
+  {:request request
+   :response response})
+
 (defn wrap-tracing [handler]
-  (fn [req]
+  (fn [request]
     (try
-      (handler req)
+      (let [response (handler request)]
+        ;; ideally we would use a logging library here
+        (future (println (trace-info request response)))
+        response)
       (catch Exception e
         (.printStackTrace e)
         {:status 500
@@ -71,5 +78,6 @@
 
 (defn handler [req]
   (let [handler-fn (-> all-routes
+                       wrap-tracing
                        ring-json/wrap-json-params)]
     (handler-fn req)))
