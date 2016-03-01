@@ -1,4 +1,5 @@
-(ns statuspage-crawler.server.routes
+(ns ^{:doc "Routes + Handler functions"}
+  statuspage-crawler.server.routes
   (:require [ring.middleware.json :as ring-json]
             [cheshire.core :as json]
             [compojure.core :refer [defroutes context routes GET POST PUT]]

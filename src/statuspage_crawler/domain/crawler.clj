@@ -1,4 +1,5 @@
-(ns statuspage-crawler.domain.crawler
+(ns ^{:doc "All logic to crawl urls"}
+  statuspage-crawler.domain.crawler
   (:require [net.cgrand.enlive-html :as html]
             [cheshire.core :as json]
             [statuspage-crawler.config :as config]

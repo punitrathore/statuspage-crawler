@@ -1,4 +1,5 @@
-(ns statuspage-crawler.server.db
+(ns ^{:doc "CRU(D) functions for Jobs"}
+  statuspage-crawler.server.db
   (:require [clojure.java.jdbc :as jdbc]
             [cheshire.core :as json]
             [statuspage-crawler.config :as config])

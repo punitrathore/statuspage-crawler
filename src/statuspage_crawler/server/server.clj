@@ -1,4 +1,5 @@
-(ns statuspage-crawler.server.server
+(ns ^{:doc "Functions to start and stop the api server"}
+  statuspage-crawler.server.server
   (:require [ring.adapter.jetty :as jetty]
             [statuspage-crawler.server.routes :as routes]))
 

@@ -1,4 +1,4 @@
-(ns statuspage-crawler.main
+(ns ^{:doc "Function which is called from command line"} statuspage-crawler.main
   (:require [statuspage-crawler.server.server :as server]))
 
 (defn -main []

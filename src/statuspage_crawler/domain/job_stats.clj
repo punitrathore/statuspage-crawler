@@ -1,4 +1,5 @@
-(ns statuspage-crawler.domain.job-stats)
+(ns ^{:doc "Functions to add statistics for a job"}
+  statuspage-crawler.domain.job-stats)
 
 (defonce job-stats (atom {}))
 
