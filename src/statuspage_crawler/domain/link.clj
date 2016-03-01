@@ -3,11 +3,14 @@
   (:require [clojurewerkz.urly.core :as urly]))
 
 (def img-regex #"(.*\.(?:png|jpg|gif))")
+;;(boolean (re-find img-regex link))
 
-(defn img-link? [link]
-  (boolean (re-find img-regex link)))
+(defn img-link? [^String link]
+  (or (.contains link ".png")
+      (.contains link ".gif")
+      (.contains link ".jpg")))
 
-(defn fully-qualify-img [url img-url]
+(defn fully-qualify-img [^String url ^String img-url]
   (cond (.startsWith img-url "//")
         (str "http:" img-url)
 
