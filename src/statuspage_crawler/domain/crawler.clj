@@ -3,10 +3,10 @@
             [cheshire.core :as json]
             [statuspage-crawler.config :as config]
             [statuspage-crawler.server.db :as db]
-            [statuspage-crawler.domain.tag :as tag]
+            [statuspage-crawler.utils.tag :as tag]
             [statuspage-crawler.domain.job-stats :as job-stats]
-            [statuspage-crawler.util :as util]
-            [statuspage-crawler.domain.link :as link]
+            [statuspage-crawler.utils.core :as util]
+            [statuspage-crawler.utils.link :as link]
             [clojurewerkz.urly.core :as urly]
             [clojure.core.memoize :as memo])
   (:import [java.net URL]))

@@ -1,4 +1,4 @@
-(ns statuspage-crawler.util
+(ns statuspage-crawler.utils.core
   (:require [clojure.pprint :as pprint]))
 
 (defn print-vals

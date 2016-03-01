@@ -6,7 +6,7 @@
             [statuspage-crawler.domain.crawler :as crawler]
             [statuspage-crawler.domain.job-stats :as job-stats]
             [statuspage-crawler.server.db :as db]
-            [statuspage-crawler.util :refer :all]))
+            [statuspage-crawler.utils.core :refer :all]))
 
 (defn not-found-response [job-id]
   {:status 404

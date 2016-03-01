@@ -4,7 +4,7 @@
             [clojure.test :refer :all]
             [cheshire.core :as json]))
 
-(def test-port 9000)
+(def test-port 9010)
 
 (defn integration-fixture [f]
   (server/start-server! test-port)

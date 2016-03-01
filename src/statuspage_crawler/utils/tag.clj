@@ -1,6 +1,6 @@
 (ns ^{:doc "Namespace to manipulate parsed html datastructure to
             extract entities"}
-  statuspage-crawler.domain.tag
+  statuspage-crawler.utils.tag
   (:require [net.cgrand.enlive-html :as html]))
 
 (def tag-type->enlive-path

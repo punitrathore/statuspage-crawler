@@ -1,5 +1,5 @@
 (ns statuspage-crawler.unit.link-test
-  (:require [statuspage-crawler.link :refer :all]
+  (:require [statuspage-crawler.utils.link :refer :all]
             [clojure.test :refer :all]))
 
 (deftest test-img-link
@@ -10,20 +10,20 @@
 
 (deftest test-fully-qualify-img
   (is (= "http://cdn.com/1.png"
-         (fully-qualify-img "abc.com" "//cdn.com/1.png")))
-  (is (= "abc.com/1.png"
-         (fully-qualify-img "abc.com" "/1.png"))))
+         (fully-qualify-img "http://abc.com" "//cdn.com/1.png")))
+  (is (= "http://abc.com/1.png"
+         (fully-qualify-img "http://abc.com" "/1.png"))))
 
 (deftest test-fully-qualify-url
-  (is (= "a.com/b.html"
-         (fully-qualify-url "a.com" "/b.html")))
+  (is (= "http://a.com/b.html"
+         (fully-qualify-url "http://a.com" "/b.html")))
 
-  (is (= "b.com/html"
-         (fully-qualify-url "a.com" "b.com/c.html"))))
+  (is (= "http://b.com/c.html"
+         (fully-qualify-url "http://a.com" "http://b.com/c.html"))))
 
 
 (deftest test-filter-and-fully-qualify-valid-images
-  (is (= [["a.com" #{"a.com/1.png"}]
+  (is (= [["http://a.com" #{"http://a.com/1.png"}]
           ["http://b.com" #{"http://c.com/3.png"}]]
-         (filter-and-fully-qualify-valid-images [["a.com" ["/1.png" "2.pdf"]]
+         (filter-and-fully-qualify-valid-images [["http://a.com" ["/1.png" "2.pdf"]]
                                                  ["http://b.com" ["//c.com/3.png"]]]))))

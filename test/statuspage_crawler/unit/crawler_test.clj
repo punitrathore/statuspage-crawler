@@ -1,5 +1,5 @@
 (ns statuspage-crawler.unit.crawler-test
-  (:require [statuspage-crawler.crawler :refer :all]
+  (:require [statuspage-crawler.domain.crawler :refer :all]
             [net.cgrand.enlive-html :as html]
             [clojure.test :refer :all]))
 
