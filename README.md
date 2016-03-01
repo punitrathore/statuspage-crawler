@@ -13,9 +13,9 @@ Server is running at http://ec2-52-35-249-101.us-west-2.compute.amazonaws.com:90
 * If a page has been crawled before, we are wasting effort in recrawling the page if it appears again. I have mitigated the computation by memoizing the function. But this comes at a cost. Each memoization will add some memory overhead. We could do better. We can maintain a list of urls already crawled, and everytime we crawl a url, we check for the existence of the url in the list.
 * Use a logging library instead of printing.
 
-## How to run locally
+## How to run locally:
 * Make sure you have Leiningin installed. Look at install instructions here - https://github.com/technomancy/leiningen
-* To start the server, from the root of the project execute the following in a shell:
+* To start the server, from the root of the project execute the following in a shell. This will start the api server on http://localhost:9000
 ```bash
         lein run
 ```
