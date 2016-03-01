@@ -6,11 +6,11 @@ usage() {
 cat <<EOF
   Usage: ${PROG} [db name] [postgresql port] [postgresql host]
 
-  Drops data and schema in eccentrica db and recreates it.
+  Drops data and schema in statuspage db and recreates it.
 
   Defaults:
-   - db name ........... eccentrica_dev
-   - postgresql port ... 5442
+   - db name ........... statuspage_dev
+   - postgresql port ... 5432
    - postgresql host ... localhost
 
 EOF
