@@ -4,6 +4,7 @@
             [compojure.core :refer [defroutes context routes GET POST PUT]]
             [compojure.route :as route]
             [statuspage-crawler.domain.crawler :as crawler]
+            [statuspage-crawler.domain.job-stats :as job-stats]
             [statuspage-crawler.server.db :as db]
             [statuspage-crawler.util :refer :all]))
 
@@ -16,6 +17,11 @@
    :body body
    :content-type "application/json"})
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;; handlers
+
+
+
 (defn create-new-job [{:keys [params]}]
   (let [urls (get params "urls")
         job-row (db/create-new-job)
@@ -26,7 +32,9 @@
 
 (defn status [{:keys [params]} job-id]
   (if-let [job (db/find-job job-id)]
-    (->ring-response 200 (json/encode {:status (:status job)}))
+    (let [job-stats (or (job-stats/stats job-id)
+                        (json/decode (:stats job)))]
+      (->ring-response 200 (json/encode job-stats)))
     (not-found-response job-id)))
 
 (defn result [{:keys [params]} job-id]
@@ -35,6 +43,8 @@
       (->ring-response 200 (json/encode (:body job)))
       (->ring-response 200 "Job is still running. Check back later."))
     (not-found-response job-id)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def all-routes
   (routes
@@ -45,10 +55,10 @@
 
    (POST "/jobs" [] create-new-job)
    
-   (GET "/status/:job-id" [job-id]
+   (GET "/jobs/status/:job-id" [job-id]
         #(status % job-id ))
 
-   (GET "/result/:job-id" [job-id]
+   (GET "/jobs/result/:job-id" [job-id]
         #(result % job-id ))
 
    (route/not-found "<h1>Page Not Found</h1>")))
