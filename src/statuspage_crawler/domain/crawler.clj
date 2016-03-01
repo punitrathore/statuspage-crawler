@@ -7,7 +7,6 @@
             [statuspage-crawler.domain.job-stats :as job-stats]
             [statuspage-crawler.utils.core :as util]
             [statuspage-crawler.utils.link :as link]
-            [clojurewerkz.urly.core :as urly]
             [clojure.core.memoize :as memo])
   (:import [java.net URL]))
 
