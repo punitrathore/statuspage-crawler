@@ -46,11 +46,10 @@
 
 (def all-routes
   (routes
-   (GET "/jobs" []
+   (GET "/foo" []
         (fn [req]
-          (println "req:: " req)
-          {:body "No jobs"}))
-
+          {:body "bar"}))
+   
    (POST "/jobs" [] create-new-job)
    
    (GET "/jobs/status/:job-id" [job-id]
