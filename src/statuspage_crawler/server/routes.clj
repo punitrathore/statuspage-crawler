@@ -20,8 +20,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;; handlers
 
-
-
 (defn create-new-job [{:keys [params]}]
   (let [urls (get params "urls")
         job-row (db/create-new-job)

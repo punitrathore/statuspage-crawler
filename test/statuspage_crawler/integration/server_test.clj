@@ -30,7 +30,7 @@
         (is (= ["https://www.statuspage.io/"]
                (-> result-resp :body json/decode keys))))))
 
-  (testing "when urls passed in are garbage"
+  (testing "when urls passed in are partly garbage, it will drop the bad urls in the response"
     (let [new-job-resp (requests/make-new-job-request test-port ["foo.bar.xzy" "http://statuspage.io"])
           job-id (-> new-job-resp :body json/decode (get "job-id"))]
       (is (= 202 (:status new-job-resp)))
