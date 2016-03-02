@@ -53,10 +53,10 @@
    
    (POST "/jobs" [] create-new-job)
    
-   (GET "/jobs/status/:job-id" [job-id]
+   (GET "/jobs/:job-id/status" [job-id]
         #(status % job-id ))
 
-   (GET "/jobs/result/:job-id" [job-id]
+   (GET "/jobs/:job-id/result" [job-id]
         #(result % job-id ))
 
    (route/not-found "<h1>Page Not Found</h1>")))

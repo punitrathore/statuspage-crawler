@@ -6,8 +6,8 @@
                                                      :content-type :json}))
 
 (defn make-status-job-request [port job-id]
-  (http/get (str "http://localhost:" port "/jobs/status/"job-id)))
+  (http/get (str "http://localhost:" port "/jobs/" job-id "/status")))
 
 (defn make-result-job-request [port job-id]
-  (http/get (str "http://localhost:" port "/jobs/result/"job-id)))
+  (http/get (str "http://localhost:" port "/jobs/" job-id "/result")))
 
