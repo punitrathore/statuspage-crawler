@@ -3,5 +3,5 @@
 
 (defn -main []
   (println "Starting server at port 9000")
-  (server/start-server! 9000)
+  (server/start-services! 9000)
   (println "Started server!"))
