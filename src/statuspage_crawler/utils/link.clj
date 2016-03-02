@@ -5,9 +5,10 @@
 ;;(boolean (re-find img-regex link))
 
 (defn img-link? [^String link]
-  (or (.contains link ".png")
-      (.contains link ".gif")
-      (.contains link ".jpg")))
+  (and link
+       (or (.contains link ".png")
+           (.contains link ".gif")
+           (.contains link ".jpg"))))
 
 (defn fully-qualify-img [^String url ^String img-url]
   (cond (.startsWith img-url "//")
@@ -27,13 +28,19 @@
                     (into #{}))])
         url->images))
 
-(defn fully-qualify-url [url new-url]
-  (cond (not new-url)
-        nil
+(defn- trim-trailing-backslash [^String s]
+  (if (and s (.endsWith s "/"))
+    (subs s 0 (dec (count s)))
+    s))
 
-        (or (.contains new-url "http://")
-            (.contains new-url "https://"))
-        new-url
+(defn fully-qualify-url [url new-url]
+  (let [new-url (trim-trailing-backslash new-url)]
+   (cond (not new-url)
+         nil
+
+         (or (.contains new-url "http://")
+             (.contains new-url "https://"))
+         new-url
         
-        :else
-        (str url new-url)))
+         :else
+         (str url new-url))))

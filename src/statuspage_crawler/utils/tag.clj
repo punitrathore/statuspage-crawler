@@ -1,7 +1,8 @@
 (ns ^{:doc "Namespace to manipulate parsed html datastructure to
             extract entities"}
   statuspage-crawler.utils.tag
-  (:require [net.cgrand.enlive-html :as html]))
+  (:require [net.cgrand.enlive-html :as html]
+            [statuspage-crawler.utils.core :refer [print-vals]]))
 
 (def tag-type->enlive-path
   {:img [:attrs :src]

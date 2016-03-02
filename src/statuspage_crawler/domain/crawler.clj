@@ -6,7 +6,7 @@
             [statuspage-crawler.server.db :as db]
             [statuspage-crawler.utils.tag :as tag]
             [statuspage-crawler.domain.job-stats :as job-stats]
-            [statuspage-crawler.utils.core :as util]
+            [statuspage-crawler.utils.core :refer :all]
             [statuspage-crawler.utils.link :as link]
             [clojure.core.memoize :as memo])
   (:import [java.net URL]))
@@ -39,29 +39,22 @@
 (def memoized-img-links+new-url-links
   (memoize img-links+new-url-links))
 
-(defn- find-imgs-and-recursively-crawl-new-urls [job-id url img-links level]
-  (job-stats/inc-inprogress job-id)
-  (let [[new-img-links new-urls] (memoized-img-links+new-url-links url)]
-    (job-stats/dec-inprogress job-id)
-    (job-stats/inc-completed job-id)
-    (if (empty? new-urls)
-      img-links
-      (->> new-urls
-           (mapcat #(find-all-image-links-in-url job-id
-                                                  %
-                                                  (conj img-links
-                                                        [url new-img-links])
-                                                  (inc level)))
-           (into [])))))
-
-(defn- find-all-image-links-in-url [job-id url img-links level]
+(defn recursively-crawl-url [job-id level url->imgs url]
   (if (= level (config/max-recursive-level))
-    img-links
-    (find-imgs-and-recursively-crawl-new-urls job-id url img-links level)))
+    url->imgs
+    (let [_ (job-stats/inc-inprogress job-id)
+          [imgs new-urls] (memoized-img-links+new-url-links url)
+          new-url->imgs (assoc url->imgs url imgs)]
+      (job-stats/dec-inprogress job-id)
+      (job-stats/inc-completed job-id)
+      (->> new-urls
+           (map #(recursively-crawl-url job-id (inc level) new-url->imgs %))
+           (apply merge)))))
 
-(defn crawl-and-return-url->imgs [job-id url]
-  (let [url+imgs (find-all-image-links-in-url job-id url #{} 0)]
-    (->> url+imgs
+(defn crawl-and-fully-qualify-images [job-id url]
+  (let [url->imgs (recursively-crawl-url job-id 0 {} url)]
+    url->imgs
+    (->> url->imgs
          link/filter-and-fully-qualify-valid-images
          (filter (fn [[url imgs]]
                    (not (empty? imgs))))
@@ -71,7 +64,7 @@
   (job-stats/new-stat job-id)
   (let [url->images (->> urls
                          (pmap (fn [url]
-                                 (crawl-and-return-url->imgs job-id url)))
+                                 (crawl-and-fully-qualify-images job-id url)))
                          (apply merge))]
     (println "Finished crawling urls, going to save to the DB for job-id : " job-id)
     (db/update-job job-id {:body (json/encode url->images)
