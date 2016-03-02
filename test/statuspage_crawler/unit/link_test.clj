@@ -19,7 +19,12 @@
          (fully-qualify-url "http://a.com" "/b.html")))
 
   (is (= "http://b.com/c.html"
-         (fully-qualify-url "http://a.com" "http://b.com/c.html"))))
+         (fully-qualify-url "http://a.com" "http://b.com/c.html")))
+
+  (is (= "http://b.com"
+         (fully-qualify-url "http://a.com" "//b.com")))
+  (is (= "https://b.com"
+         (fully-qualify-url "https://a.com" "//b.com"))))
 
 
 (deftest test-filter-and-fully-qualify-valid-images

@@ -33,7 +33,7 @@
     (subs s 0 (dec (count s)))
     s))
 
-(defn fully-qualify-url [url new-url]
+(defn fully-qualify-url [^String url ^String new-url]
   (let [new-url (trim-trailing-backslash new-url)]
    (cond (not new-url)
          nil
@@ -41,6 +41,12 @@
          (or (.contains new-url "http://")
              (.contains new-url "https://"))
          new-url
+
+         (or (.startsWith new-url "//"))
+         (let [http-protocol (if (.contains url "http://")
+                               "http:"
+                               "https:")]
+           (str http-protocol new-url))
         
          :else
          (str url new-url))))
